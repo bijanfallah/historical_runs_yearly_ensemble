@@ -223,7 +223,7 @@ for i in range(4,5):
     plt.vlines(x=min(rlon_o[buf:-buf]), ymin=min(rlat_o[buf:-buf]), ymax=max(rlat_o[buf:-buf]), color='black', linewidth=4)
     plt.vlines(x=max(rlon_o[buf:-buf]), ymin=min(rlat_o[buf:-buf]), ymax=max(rlat_o[buf:-buf]), color='black', linewidth=4)
 
-    plt.title("Shift "+ str(i)+pdf_name)
+    #plt.title("Shift "+ str(i)+pdf_name)
 
     xs, ys, zs = rp.transform_points(pc,
                                      np.array([-17, 105.0]),
