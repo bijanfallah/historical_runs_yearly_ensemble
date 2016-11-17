@@ -5,10 +5,10 @@ DIR='/scratch/users/fallah/IO'
 import numpy as np
 import csv
 #res= np.zeros((16,50))
-res= np.zeros((5,50))
+res= np.zeros((7,50))
 k=0
 #for i in range(500,2100,100):
-for i in range(500,1000,100):
+for i in range(500,1200,100):
     kk=0
     for j in range(1,51):
         if (j<10):
@@ -32,7 +32,7 @@ fig.set_size_inches(14, 10)
 #for i in range(16):
 x=range(1,51)
 
-for i in range(5):
+for i in range(7):
     ax.plot(x,res[i,:],'o-', label=str(i*100+500), lw=3, alpha=.7, ms=10)
     ax.legend(loc='upper center', shadow=True)
 ax.yaxis.set_ticks_position('left')
@@ -42,5 +42,6 @@ ax.set_ylabel(r"$RMSE$", labelpad=5,size=32)
 ax.set_xlabel(r"$L$", labelpad=5,size=32)
 plt.legend(loc=4, shadow=True,fontsize=32)
 plt.xlim(0,51)
+plt.ylim(.20,.32)
 plt.tick_params(axis='both', which='major', labelsize=22)
 plt.savefig('Correlation_vs_RMSE.pdf')
