@@ -5,16 +5,24 @@ from RMSE_MAPS_INGO import read_data_from_mistral as rdfm
 DIR='/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/Optimal_Interpolation/optiminterp/inst/'
 octave.run(DIR+"run_IO.m")
 
+# ============================================= NAMELIST ==========================================
 ## read forecast :
+SEAS='DJF'
 NN=1000#number of observations should be read from previous funcions!!!!
 #NN=600
-month_length=12
-t_f, lat_f, lon_f, rlat_f, rlon_f =rdfm(dir='/work/bb0962/work3/member04_relax_3_big/post/',
-                                        name='member04_relax_3_T_2M_ts_monmean_1995.nc',
+#month_length=12
+month_length=20
+name_1 = 'member04_relax_3_T_2M_ts_splitseas_1984_2014_' + SEAS + '.nc'
+name_2 = 'member_relax_3_T_2M_ts_splitseas_1984_2014_' + SEAS + '.nc'
+
+t_f, lat_f, lon_f, rlat_f, rlon_f =rdfm(dir='/work/bb0962/work4/member04_relax_3_big/post/',
+                                        name=name_1,
                                         var='T_2M')
+# =================================================================================================
+
 print(t_f.shape)
 ## add correction to forecast :
-result_IO = t_f - t_f
+result_IO = t_f[0:month_length,:,:] - t_f[0:month_length,:,:]
 import os.path
 import csv
 import numpy
@@ -43,14 +51,15 @@ from CCLM_OUTS import Plot_CCLM
 # plot difference
 buffer = 20
 pdf_name= 'last_m100_l20.pdf'
-t_o, lat_o, lon_o, rlat_o, rlon_o = rdfm(dir='/work/bb0962/work3/member_relax_3_big/post/',
-                                         name='member_relax_3_T_2M_ts_monmean_1995.nc', var='T_2M')
+
+t_o, lat_o, lon_o, rlat_o, rlon_o = rdfm(dir='/work/bb0962/work4/member_relax_3_big/post/',
+                                         name=name_2, var='T_2M')
 start_lon=(buffer+4)
 start_lat=(buffer-4)
 dext_lon = t_o.shape[2] - (2 * buffer)
 dext_lat = t_o.shape[1] - (2 * buffer)
-forecast = result_IO[:, start_lat:start_lat + dext_lat, start_lon:start_lon + dext_lon]
-obs = t_o[:, buffer:buffer + dext_lat, buffer:buffer + dext_lon]
+forecast = result_IO[0:month_length, start_lat:start_lat + dext_lat, start_lon:start_lon + dext_lon]
+obs = t_o[0:month_length, buffer:buffer + dext_lat, buffer:buffer + dext_lon]
 RMSE=np.zeros((forecast.shape[1],forecast.shape[2]))
 lats_f1=lat_f[start_lat:start_lat + dext_lat, start_lon:start_lon + dext_lon]
 lons_f1=lon_f[start_lat:start_lat + dext_lat, start_lon:start_lon + dext_lon]
@@ -72,18 +81,23 @@ rp = ccrs.RotatedPole(pole_longitude=-165.0,
 pc = ccrs.PlateCarree()
 ax = plt.axes(projection=rp)
 ax.coastlines('50m', linewidth=0.8)
-v = np.linspace(0, 1, 11, endpoint=True)
+#if SEAS[0] == "D":
+#    v = np.linspace(0, 4, 9, endpoint=True)
+#else:
+#    v = np.linspace(0, 1, 6, endpoint=True)
+
+
 # Write the RMSE mean in a file
 import csv
 from itertools import izip
-names='RMSE_'+pdf_name+'.csv'
+names='./RMSE_'+pdf_name+'.csv'
 with open(names, 'wb') as f:
      writer = csv.writer(f)
      writer.writerow([NN,np.mean(RMSE)])
+print 'ffffffffffffffffffffffffff'
 
-
-cs=plt.contourf(lons_f1, lats_f1, RMSE,v, transform=ccrs.PlateCarree(), cmap=plt.cm.terrain)
-
+#cs=plt.contourf(lons_f1, lats_f1, RMSE,v, transform=ccrs.PlateCarree(), cmap=plt.cm.terrain)
+cs=plt.contourf(lons_f1, lats_f1, RMSE, transform=ccrs.PlateCarree(), cmap=plt.cm.terrain)
 cb = plt.colorbar(cs)
 cb.set_label('RMSE [K]', fontsize=20)
 cb.ax.tick_params(labelsize=20)
@@ -113,7 +127,8 @@ plt.hlines(y=min(rlat_o[buffer:-buffer]), xmin=min(rlon_o[buffer:-buffer]), xmax
 plt.hlines(y=max(rlat_o[buffer:-buffer]), xmin=min(rlon_o[buffer:-buffer]), xmax=max(rlon_o[buffer:-buffer]), color='black', linewidth=4)
 plt.vlines(x=min(rlon_o[buffer:-buffer]), ymin=min(rlat_o[buffer:-buffer]), ymax=max(rlat_o[buffer:-buffer]), color='black', linewidth=4)
 plt.vlines(x=max(rlon_o[buffer:-buffer]), ymin=min(rlat_o[buffer:-buffer]), ymax=max(rlat_o[buffer:-buffer]), color='black', linewidth=4)
-Plot_CCLM(dir_mistral='/work/bb0962/work3/member_relax_3_big/post/',name='member_relax_3_T_2M_ts_monmean_1995.nc',bcolor='black',var='T_2M',flag='FALSE',color_map='TRUE', alph=1, grids='FALSE', grids_color='red', rand_obs='TRUE', NN=NN)
+
+Plot_CCLM(dir_mistral='/work/bb0962/work4/member_relax_3_big/post/',name=name_2,bcolor='black',var='T_2M',flag='FALSE',color_map='TRUE', alph=1, grids='FALSE', grids_color='red', rand_obs='TRUE', NN=NN)
 #plt.title("Shift "+ str(4)+pdf_name)
 
 xs, ys, zs = rp.transform_points(pc,

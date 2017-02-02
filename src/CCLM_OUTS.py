@@ -16,7 +16,8 @@ def rand_station_locations(N=50,sed=777):
     import random
     import re
     data = requests.get(
-        "http://www.ecad.eu/download/ensembles/data/ensembles_all_stations_v13.1.txt")  # read only 20 000 chars
+        #"http://www.ecad.eu/download/ensembles/data/ensembles_all_stations_v13.1.txt")  # read only 20 000 chars
+        "http://www.ecad.eu/download/ensembles/data/ensembles_tg_stations_v14.0.txt") # new version!
     Data = []
 
     pattern = re.compile(r"[^-\d]*([\-]{0,1}\d+\.\d+)[^-\d]*")
@@ -31,17 +32,20 @@ def rand_station_locations(N=50,sed=777):
     pairs = []
     i = 0
     end = len(results)
+
     while i < end - 1:
         pairs.append((results[i], results[i + 1]))
-        i += 2
+        i += 1
 
     # # Choose N random stations
     random.seed(sed)
-    rand_obs_number = random.sample(range(0, 10001), 9900)
+    rand_obs_number = random.sample(range(0, 8900), 8900)
     k = 0
     lat={}
     lon={}
     for i in rand_obs_number:
+
+
         if 30 < float(pairs[i][0]) < 65 and -10 < float(pairs[i][1]) < 44:
             lat[k]= float(pairs[i][0])
             lon[k] = float(pairs[i][1])

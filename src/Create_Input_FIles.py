@@ -10,8 +10,15 @@ error variance of the background field
 '''
 
 #Step 1:
+# ========================================== NAMELIST ================================================
+SEAS="DJF"
 flag1=True
 NN=1000#number of observations
+month_length=20
+# ====================================================================================================
+name_2 = 'member_relax_3_T_2M_ts_splitseas_1984_2014_' + SEAS + '.nc'
+name_1 = 'member04_relax_3_T_2M_ts_splitseas_1984_2014_' + SEAS + '.nc'
+
 #NN=600
 import pandas as pd
 from make_pseudo_obs import extract_pseudo
@@ -22,14 +29,15 @@ if flag1==True :
    #                                                                                     dir='/work/bb0962/work3/member04_relax_3_big/post/',
    #                                                                                     name='member04_relax_3_T_2M_ts_monmean_1995.nc',
    #                                                                                     var='T_2M')
-    First_Guess_dirty, First_Guess, rlon_s, rlat_s, t_o , rlon_o, rlat_o=extract_pseudo(NN,dir='/work/bb0962/work3/member04_relax_3_big/post/',name='member04_relax_3_T_2M_ts_monmean_1995.nc')
+
+    First_Guess_dirty, First_Guess, rlon_s, rlat_s, t_o , rlon_o, rlat_o=extract_pseudo(NN,dir='/work/bb0962/work4/member04_relax_3_big/post/',name=name_1,month_length=month_length)
 
     import csv
     from itertools import izip
     from itertools import repeat
     with open('First_Guess_DATA.csv', 'wb') as f:
         writer = csv.writer(f)
-        for i in range(0,12):
+        for i in range(0,month_length):
             writer.writerows(izip(rlon_s,rlat_s,First_Guess[:,i],First_Guess_dirty[:,i],list(repeat(i,NN))))
 
 
@@ -48,8 +56,8 @@ f.Time = Obs.Time
 #### Step  2
 
 import numpy as np
-Vari    =   np.zeros(12)
-for i in range(0,12):
+Vari    =   np.zeros(month_length)
+for i in range(0,month_length):
     ER_Obs  =   Obs.Vals_dirty[Obs.Time==i] - Obs.Vals[Obs.Time==i]
     ER_BK   =   FG.Vals[Obs.Time==i]        - Obs.Vals[Obs.Time==i]
     Vari[i]    =    np.var(ER_Obs)/np.var(ER_BK)
@@ -57,13 +65,15 @@ for i in range(0,12):
 
 ## Step 3 write the INPUT files:
 # write the x,y,f,var to the INPUT file
-
+import os
+ddd = os.getcwd()
+print ddd
 import csv
 from itertools import izip
 from itertools import repeat
 with open('INPUT.csv', 'wb') as ff:
     writer = csv.writer(ff)
-    for i in range(0,12):
+    for i in range(0,month_length):
         writer.writerows(izip(f.lon[f.Time==i],f.lat[f.Time==i],f.Vals[f.Time==i]
                               ,f.Time[f.Time==i],list(repeat(Vari[i],NN))))
 

@@ -106,6 +106,16 @@ def calculate_MAPS_RMSE_of_the_member(member='1', buffer=4, option=0):
             var='T_2M')
        # pdf_name = "Figure_" + pdf + str(member) + "_" + str(buf) + "relax_9_small.pdf"
         pdf_name="Figure07_RMSE.pdf"
+    if option == 9:
+        SEAS="DJF"
+        name_2 = 'member_relax_3_T_2M_ts_splitseas_1984_2014_' + SEAS + '.nc'
+        name_1 = 'member04_relax_3_T_2M_ts_splitseas_1984_2014_' + SEAS + '.nc'
+        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb0962/work4/member_relax_3_big/post/',
+                                                                   name=name_2, var='T_2M')
+        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb0962/work4/member0' + str(member) + '_relax_3_big/post/',
+            name=name_1, var='T_2M')
+       # pdf_name = "Figure_" + pdf + str(member) + "_" + str(buf) + "relax_9_small.pdf"
+        pdf_name="Figure08_RMSE.pdf"
     #rel='6'
     #t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb0962/work2/member/post/',name='member_T_2M_ts_monmean_1995.nc',var='T_2M')
     #t_f, lat_f, lon_f, rlat_f, rlon_f  = read_data_from_mistral(dir='/work/bb0962/work2/member/post/',name='member_T_2M_ts_monmean_1995.nc',var='T_2M')
@@ -142,8 +152,10 @@ def calculate_MAPS_RMSE_of_the_member(member='1', buffer=4, option=0):
     #print('thennnnnnnn')
     #print(dext_lon)
     #print(dext_lat)
-    forecast = t_f[:, start_lat:start_lat + dext_lat, start_lon:start_lon + dext_lon]
-    obs = t_o[:, buffer:buffer + dext_lat, buffer:buffer + dext_lon]
+    month_length=20
+    forecast = t_f[0:month_length, start_lat:start_lat + dext_lat, start_lon:start_lon + dext_lon]
+    obs = t_o[0:month_length, buffer:buffer + dext_lat, buffer:buffer + dext_lon]
+
     RMSE=np.zeros((forecast.shape[1],forecast.shape[2]))
     lats_f1=lat_f[start_lat:start_lat + dext_lat, start_lon:start_lon + dext_lon]
     lons_f1=lon_f[start_lat:start_lat + dext_lat, start_lon:start_lon + dext_lon]
@@ -161,9 +173,10 @@ def calculate_MAPS_RMSE_of_the_member(member='1', buffer=4, option=0):
 import cartopy.crs as ccrs
 import cartopy.feature
 
-option=8
+option=9
 buf=20
 for i in range(4,5):
+    SEAS="DJF"
     nam , lats_f1, lons_f1, rlat_f, rlon_f, rlat_o, rlon_o , pdf_name   = calculate_MAPS_RMSE_of_the_member(i, buffer=buf, option=option)
     fig = plt.figure('1')
     fig.set_size_inches(14, 10)
@@ -185,8 +198,14 @@ for i in range(4,5):
     #ax.add_feature(cartopy.feature.LAKES,
     #               edgecolor='black', facecolor='none',
     #               linewidth=0.8)
-    v = np.linspace(0, 1, 11, endpoint=True)
-    cs = plt.contourf(lons_f1,lats_f1,nam, v, transform=ccrs.PlateCarree(), cmap=plt.cm.terrain)
+    #v = np.linspace(0, 1, 11, endpoint=True)
+    #if SEAS[0] == "D":
+    #    v = np.linspace(0, 4, 9, endpoint=True)
+    #else:
+    #    v = np.linspace(0, 1, 6, endpoint=True)
+
+    #cs = plt.contourf(lons_f1,lats_f1,nam, v, transform=ccrs.PlateCarree(), cmap=plt.cm.terrain)
+    cs = plt.contourf(lons_f1,lats_f1,nam, transform=ccrs.PlateCarree(), cmap=plt.cm.terrain)
     cb = plt.colorbar(cs)
     cb.set_label('RMSE [K]', fontsize=20)
     cb.ax.tick_params(labelsize=20)
