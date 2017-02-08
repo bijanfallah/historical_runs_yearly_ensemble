@@ -1,4 +1,4 @@
-def extract_pseudo(NN=2000,dir='/work/bb0962/work4/member_relax_3_big/post/',
+def extract_pseudo(NN=2000,dir='/work/bb1029/b324045/work4/member_relax_3_big/post/',
                    name='member_relax_3_T_2M_ts_monmean_1995.nc',var='T_2M',month_length=20):
 
     '''
@@ -9,10 +9,11 @@ def extract_pseudo(NN=2000,dir='/work/bb0962/work4/member_relax_3_big/post/',
     import numpy as np
 
     import random
-    random.seed(777)
+    import scipy.spatial as spatial
+    random.seed(770)
     from RMSE_MAPS_INGO import read_data_from_mistral as rdfm
     from CCLM_OUTS import rand_station_locations as rsl
-    s, t = rsl(N=7000, sed=777)
+    s, t = rsl(N=7000, sed=770)
     #TT=t.values()
     TT=t
     #SS=s.values()
@@ -27,7 +28,19 @@ def extract_pseudo(NN=2000,dir='/work/bb0962/work4/member_relax_3_big/post/',
     points=np.zeros((NN,3))
     # TODO: data-thining
     # thin the data to let one obs in each grid:
+    fert_ok = 0
+    poi = np.array([SS[0:NN], TT[0:NN]])
+    print poi.shape
+    #point_tree = spatial.cKDTree(np.transpose(poi))
+    #for fert in range(NN):
 
+
+    #    if len(point_tree.query_ball_point([SS[fert],TT[fert]], .44)) >= 1:
+
+    #        print len(point_tree.query_ball_point([SS[fert],TT[fert]], .44)), fert_ok
+    #        points[fert_ok, 1] = SS[fert]
+    #        points[fert_ok, 2] = TT[fert]
+    #        fert_ok = fert_ok + 1
     points[:, 1] = SS[0:NN]
     points[:, 2] = TT[0:NN]
 
@@ -62,7 +75,7 @@ def extract_pseudo(NN=2000,dir='/work/bb0962/work4/member_relax_3_big/post/',
 month_length=20
 SEAS="DJF"
 NN=600#Number of Observations
-dir='/work/bb0962/work4/member_relax_3_big/post/'
+dir='/work/bb1029/b324045/work4/member_relax_3_big/post/'
 name = 'member_relax_3_T_2M_ts_splitseas_1984_2014_' + SEAS + '.nc'
 # ==================================================================================================
 

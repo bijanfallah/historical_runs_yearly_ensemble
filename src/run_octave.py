@@ -15,7 +15,7 @@ month_length=20
 name_1 = 'member04_relax_3_T_2M_ts_splitseas_1984_2014_' + SEAS + '.nc'
 name_2 = 'member_relax_3_T_2M_ts_splitseas_1984_2014_' + SEAS + '.nc'
 
-t_f, lat_f, lon_f, rlat_f, rlon_f =rdfm(dir='/work/bb0962/work4/member04_relax_3_big/post/',
+t_f, lat_f, lon_f, rlat_f, rlon_f =rdfm(dir='/work/bb1029/b324045/work4/member04_relax_3_big/post/',
                                         name=name_1,
                                         var='T_2M')
 # =================================================================================================
@@ -52,7 +52,7 @@ from CCLM_OUTS import Plot_CCLM
 buffer = 20
 pdf_name= 'last_m100_l20.pdf'
 
-t_o, lat_o, lon_o, rlat_o, rlon_o = rdfm(dir='/work/bb0962/work4/member_relax_3_big/post/',
+t_o, lat_o, lon_o, rlat_o, rlon_o = rdfm(dir='/work/bb1029/b324045/work4/member_relax_3_big/post/',
                                          name=name_2, var='T_2M')
 start_lon=(buffer+4)
 start_lat=(buffer-4)
@@ -128,7 +128,7 @@ plt.hlines(y=max(rlat_o[buffer:-buffer]), xmin=min(rlon_o[buffer:-buffer]), xmax
 plt.vlines(x=min(rlon_o[buffer:-buffer]), ymin=min(rlat_o[buffer:-buffer]), ymax=max(rlat_o[buffer:-buffer]), color='black', linewidth=4)
 plt.vlines(x=max(rlon_o[buffer:-buffer]), ymin=min(rlat_o[buffer:-buffer]), ymax=max(rlat_o[buffer:-buffer]), color='black', linewidth=4)
 
-Plot_CCLM(dir_mistral='/work/bb0962/work4/member_relax_3_big/post/',name=name_2,bcolor='black',var='T_2M',flag='FALSE',color_map='TRUE', alph=1, grids='FALSE', grids_color='red', rand_obs='TRUE', NN=NN)
+Plot_CCLM(dir_mistral='/work/bb1029/b324045/work4/member_relax_3_big/post/',name=name_2,bcolor='black',var='T_2M',flag='FALSE',color_map='TRUE', alph=1, grids='FALSE', grids_color='red', rand_obs='TRUE', NN=NN)
 #plt.title("Shift "+ str(4)+pdf_name)
 
 xs, ys, zs = rp.transform_points(pc,

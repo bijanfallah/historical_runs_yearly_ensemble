@@ -30,7 +30,7 @@ if flag1==True :
    #                                                                                     name='member04_relax_3_T_2M_ts_monmean_1995.nc',
    #                                                                                     var='T_2M')
 
-    First_Guess_dirty, First_Guess, rlon_s, rlat_s, t_o , rlon_o, rlat_o=extract_pseudo(NN,dir='/work/bb0962/work4/member04_relax_3_big/post/',name=name_1,month_length=month_length)
+    First_Guess_dirty, First_Guess, rlon_s, rlat_s, t_o , rlon_o, rlat_o=extract_pseudo(NN,dir='/work/bb1029/b324045/work4/member04_relax_3_big/post/',name=name_1,month_length=month_length)
 
     import csv
     from itertools import izip

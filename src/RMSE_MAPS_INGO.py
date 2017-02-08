@@ -14,7 +14,7 @@ from CCLM_OUTS import Plot_CCLM
 # option == 7 ->  shift 4 with corrected smaller cclm domain and nboundlines = 9
 # option == 8 ->  shift 4 with corrected bigger cclm domain and nboundlines = 3
 from CCLM_OUTS import Plot_CCLM
-def read_data_from_mistral(dir='/work/bb0962/work1/work/member/post/',name='member_T_2M_ts_seasmean.nc',var='T_2M'):
+def read_data_from_mistral(dir='/work/bb1029/b324045/work1/work/member/post/',name='member_T_2M_ts_seasmean.nc',var='T_2M'):
     # type: (object, object, object) -> object
     #a function to read the data from mistral work
 
@@ -41,25 +41,25 @@ def calculate_MAPS_RMSE_of_the_member(member='1', buffer=4, option=0):
     #
     pdf = 'RMSE_Patterns_'
     if option == 1:
-        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb0962/work1/work/member/post/',
+        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb1029/b324045/work1/work/member/post/',
                                                                    name='member_T_2M_ts_monmean_1995.nc', var='T_2M')
-        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb0962/work1/work/member0' + str(member) + '/post/',
+        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb1029/b324045/work1/work/member0' + str(member) + '/post/',
             name='member0' + str(member) + '_T_2M_ts_monmean_1995.nc',
             var='T_2M')
         #pdf_name="Figure_" +pdf+ str(member)+ "_"+str(buf)+"_Default.pdf"
         pdf_name="RMSE_"+"_Default.pdf"
 
     if option == 2:
-        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb0962/work2/member/post/',
+        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb1029/b324045/work2/member/post/',
                                                                    name='member_T_2M_ts_monmean_1995.nc', var='T_2M')
-        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb0962/work2/member0' + str(member) + '/post/',
+        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb1029/b324045/work2/member0' + str(member) + '/post/',
             name='member0' + str(member) + '_T_2M_ts_monmean_1995.nc',
             var='T_2M')
         pdf_name="Figure_" +pdf+ str(member)+ "_"+str(buf)+"_Small.pdf"
     if option == 3:
-        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb0962/work2/member/post/',
+        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb1029/b324045/work2/member/post/',
                                                                    name='member_T_2M_ts_monmean_1995.nc', var='T_2M')
-        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb0962/work2/member0' + str(member) + '_relax/post/',
+        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb1029/b324045/work2/member0' + str(member) + '_relax/post/',
             name='member0' + str(member) + '_relax_T_2M_ts_monmean_1995.nc',
             var='T_2M')
         pdf_name="Figure_" +pdf+ str(member)+ "_"+str(buf)+"_Small_relax6.pdf"
@@ -67,41 +67,41 @@ def calculate_MAPS_RMSE_of_the_member(member='1', buffer=4, option=0):
 
 
     if option == 4:
-        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb0962/work2/member_relax_0_small/post/',
+        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb1029/b324045/work2/member_relax_0_small/post/',
                                                                    name='member_relax_0_T_2M_ts_monmean_1995.nc', var='T_2M')
-        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb0962/work2/member0' + str(member) + '_relax_0_small/post/',
+        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb1029/b324045/work2/member0' + str(member) + '_relax_0_small/post/',
             name='member0' + str(member) + '_relax_0_T_2M_ts_monmean_1995.nc',
             var='T_2M')
         #pdf_name = "Figure_" + pdf + str(member) + "_" + str(buf) + "relax_0_small.pdf"
         pdf_name = "Figure03_RMSE.pdf"
     if option == 5:
-        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb0962/work2/member_relax_4_small/post/',
+        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb1029/b324045/work2/member_relax_4_small/post/',
                                                                    name='member_relax_4_T_2M_ts_monmean_1995.nc', var='T_2M')
-        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb0962/work2/member0' + str(member) + '_relax_4_small/post/',
+        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb1029/b324045/work2/member0' + str(member) + '_relax_4_small/post/',
             name='member0' + str(member) + '_relax_4_T_2M_ts_monmean_1995.nc',
             var='T_2M')
        # pdf_name = "Figure_" + pdf + str(member) + "_" + str(buf) + "relax_9_small.pdf"
         pdf_name="Figure04_RMSE.pdf"
     if option == 6:
-        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb0962/work2/member_relax_6_small/post/',
+        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb1029/b324045/work2/member_relax_6_small/post/',
                                                                    name='member_relax_6_T_2M_ts_monmean_1995.nc', var='T_2M')
-        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb0962/work2/member0' + str(member) + '_relax_6_small/post/',
+        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb1029/b324045/work2/member0' + str(member) + '_relax_6_small/post/',
             name='member0' + str(member) + '_relax_6_T_2M_ts_monmean_1995.nc',
             var='T_2M')
        # pdf_name = "Figure_" + pdf + str(member) + "_" + str(buf) + "relax_6_small.pdf"
         pdf_name="Figure05_RMSE.pdf"
     if option == 7:
-        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb0962/work2/member_relax_9_small/post/',
+        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb1029/b324045/work2/member_relax_9_small/post/',
                                                                    name='member_relax_9_T_2M_ts_monmean_1995.nc', var='T_2M')
-        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb0962/work2/member0' + str(member) + '_relax_9_small/post/',
+        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb1029/b324045/work2/member0' + str(member) + '_relax_9_small/post/',
             name='member0' + str(member) + '_relax_9_T_2M_ts_monmean_1995.nc',
             var='T_2M')
        # pdf_name = "Figure_" + pdf + str(member) + "_" + str(buf) + "relax_9_small.pdf"
         pdf_name="Figure06_RMSE.pdf"
     if option == 8:
-        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb0962/work3/member_relax_3_big/post/',
+        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb1029/b324045/work3/member_relax_3_big/post/',
                                                                    name='member_relax_3_T_2M_ts_monmean_1995.nc', var='T_2M')
-        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb0962/work3/member0' + str(member) + '_relax_3_big/post/',
+        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb1029/b324045/work3/member0' + str(member) + '_relax_3_big/post/',
             name='member0' + str(member) + '_relax_3_T_2M_ts_monmean_1995.nc',
             var='T_2M')
        # pdf_name = "Figure_" + pdf + str(member) + "_" + str(buf) + "relax_9_small.pdf"
@@ -110,12 +110,12 @@ def calculate_MAPS_RMSE_of_the_member(member='1', buffer=4, option=0):
         SEAS="DJF"
         name_2 = 'member_relax_3_T_2M_ts_splitseas_1984_2014_' + SEAS + '.nc'
         name_1 = 'member04_relax_3_T_2M_ts_splitseas_1984_2014_' + SEAS + '.nc'
-        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb0962/work4/member_relax_3_big/post/',
+        t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb1029/b324045/work4/member_relax_3_big/post/',
                                                                    name=name_2, var='T_2M')
-        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb0962/work4/member0' + str(member) + '_relax_3_big/post/',
+        t_f, lat_f, lon_f, rlat_f, rlon_f = read_data_from_mistral(dir='/work/bb1029/b324045/work4/member0' + str(member) + '_relax_3_big/post/',
             name=name_1, var='T_2M')
        # pdf_name = "Figure_" + pdf + str(member) + "_" + str(buf) + "relax_9_small.pdf"
-        pdf_name="Figure08_RMSE.pdf"
+        pdf_name="Figure08_RMSE_T_2M.pdf"
     #rel='6'
     #t_o, lat_o, lon_o, rlat_o, rlon_o = read_data_from_mistral(dir='/work/bb0962/work2/member/post/',name='member_T_2M_ts_monmean_1995.nc',var='T_2M')
     #t_f, lat_f, lon_f, rlat_f, rlon_f  = read_data_from_mistral(dir='/work/bb0962/work2/member/post/',name='member_T_2M_ts_monmean_1995.nc',var='T_2M')
@@ -168,6 +168,7 @@ def calculate_MAPS_RMSE_of_the_member(member='1', buffer=4, option=0):
 
             RMSE[i,j] = mean_squared_error(obs_resh, forecast_resh) ** 0.5
 
+    RMSE_TIME_SERIES = mean_squared_error(obs.mean(axis=tuple(range(1, 3))),forecast.mean(axis=tuple(range(1, 3)))) ** 0.5
     return(RMSE, lats_f1, lons_f1, rlat_f, rlon_f, rlat_o, rlon_o, pdf_name)
 
 import cartopy.crs as ccrs
