@@ -169,7 +169,7 @@ def calculate_MAPS_RMSE_of_the_member(member='1', buffer=4, option=0):
             RMSE[i,j] = mean_squared_error(obs_resh, forecast_resh) ** 0.5
 
     RMSE_TIME_SERIES = mean_squared_error(obs.mean(axis=tuple(range(1, 3))),forecast.mean(axis=tuple(range(1, 3)))) ** 0.5
-    return(RMSE, lats_f1, lons_f1, rlat_f, rlon_f, rlat_o, rlon_o, pdf_name)
+    return(RMSE_TIME_SERIES, RMSE, lats_f1, lons_f1, rlat_f, rlon_f, rlat_o, rlon_o, pdf_name)
 
 import cartopy.crs as ccrs
 import cartopy.feature
@@ -178,7 +178,7 @@ option=9
 buf=20
 for i in range(4,5):
     SEAS="DJF"
-    nam , lats_f1, lons_f1, rlat_f, rlon_f, rlat_o, rlon_o , pdf_name   = calculate_MAPS_RMSE_of_the_member(i, buffer=buf, option=option)
+    nam_ts, nam , lats_f1, lons_f1, rlat_f, rlon_f, rlat_o, rlon_o , pdf_name   = calculate_MAPS_RMSE_of_the_member(i, buffer=buf, option=option)
     fig = plt.figure('1')
     fig.set_size_inches(14, 10)
     #Plot_CCLM(bcolor='black', grids='FALSE')
@@ -257,5 +257,13 @@ for i in range(4,5):
 
     plt.savefig(pdf_name)
 
-    plt.close()
 
+
+    # RMSE time-series
+    plt.close()
+    fig = plt.figure('2')
+    fig.set_size_inches(14, 10)
+    plt.plot(nam_ts,'o-', c= 'green')
+    ax.set_xlabel('$time$', size=35)
+    ax.set_ylabel('$RMSE$', size=35)
+    plt.savefig(pdf_name+'_ts.pdf')
