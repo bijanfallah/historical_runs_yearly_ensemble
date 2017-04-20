@@ -5,9 +5,9 @@ def extract_pseudo(NN=2000,dir='/work/bb1029/b324045/work4/member_relax_3_big/po
     :param nn: number of observations
     :return: PO, lon, lat, rlon, rlat pseudo obs and their locations in rotated and regular grid
     '''
-
+    import math
     import numpy as np
-
+    import matplotlib.pyplot as plt
     import random
     import scipy.spatial as spatial
     random.seed(770)
@@ -62,13 +62,24 @@ def extract_pseudo(NN=2000,dir='/work/bb1029/b324045/work4/member_relax_3_big/po
         np.random.seed(777+k)
         #noise[k,:] = np.random.normal(0, np.sqrt(np.var(Interp_Vals[k,:])/200), 12)
         #noise[k,:] = np.random.normal(0, .3, month_length) # for monthly values
-        #noise[k,:] = np.random.normal(0, 1, month_length) # for sesonal values T_2M
-        noise[k,:] = np.random.normal(0, .1, month_length) # for sesonal values TOT_PREC
+        #noise[k,:] = np.random.normal(0, .5, month_length) # for sesonal values T_2M winter DJF
+        noise[k,:] = np.random.normal(0, .5, month_length) # for sesonal values T_2M summer JJA
+        #noise[k,:] = np.random.normal(0, .1, month_length) # for sesonal values TOT_PREC
 
         # plt.hist(f,30) to plot the noise
+
+
         Interp_Vals_dirty[k,:] = Interp_Vals[k,:] + noise[k,:]
 
-
+    fig = plt.figure('3')
+    fig.set_size_inches(14, 10)
+    noi = np.random.normal(0, .5, 30)
+    print 'SNR = =================',((0.5**2) / np.mean(noi**2))
+    plt.hist(noi, bins=10)
+    plt.title('Example of added error for a single point', size=30, y=1.02)
+    plt.xlabel('$Error (K)$', size=30)
+    plt.savefig('NOISE.pdf')
+    plt.close()
     return(Interp_Vals_dirty, Interp_Vals, TT[0:NN], SS[0:NN], t_o[0:month_length,:,:], rlon_o, rlat_o)
 
 # ========================================= NAMELIST ===============================================

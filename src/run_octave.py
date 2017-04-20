@@ -61,6 +61,7 @@ dext_lat = t_o.shape[1] - (2 * buffer)
 forecast = result_IO[0:month_length, start_lat:start_lat + dext_lat, start_lon:start_lon + dext_lon]
 obs = t_o[0:month_length, buffer:buffer + dext_lat, buffer:buffer + dext_lon]
 RMSE=np.zeros((forecast.shape[1],forecast.shape[2]))
+RMSE_TIME_SERIES=np.zeros(forecast.shape[0])
 lats_f1=lat_f[start_lat:start_lat + dext_lat, start_lon:start_lon + dext_lon]
 lons_f1=lon_f[start_lat:start_lat + dext_lat, start_lon:start_lon + dext_lon]
 #print(forecast.shape[:])
@@ -70,6 +71,13 @@ for i in range(0,forecast.shape[1]):
         forecast_resh=np.squeeze(forecast[:,i,j])
         obs_resh=np.squeeze(obs[:,i,j])
         RMSE[i,j] = mean_squared_error(obs_resh, forecast_resh) ** 0.5
+for i in range(0,forecast.shape[0]):
+    forecast_resh_ts=np.squeeze(forecast[i,:,:])
+    obs_resh_ts=np.squeeze(obs[i,:,:])
+
+    RMSE_TIME_SERIES[i] = mean_squared_error(obs_resh_ts, forecast_resh_ts) ** 0.5
+
+
 fig = plt.figure('1')
 fig.set_size_inches(14, 10)
 rp = ccrs.RotatedPole(pole_longitude=-165.0,
@@ -81,10 +89,10 @@ rp = ccrs.RotatedPole(pole_longitude=-165.0,
 pc = ccrs.PlateCarree()
 ax = plt.axes(projection=rp)
 ax.coastlines('50m', linewidth=0.8)
-#if SEAS[0] == "D":
-#    v = np.linspace(0, 4, 9, endpoint=True)
-#else:
-#    v = np.linspace(0, 1, 6, endpoint=True)
+if SEAS[0] == "D":
+    v = np.linspace(0, 4, 9, endpoint=True)
+else:
+    v = np.linspace(0, 2, 9, endpoint=True)
 
 
 # Write the RMSE mean in a file
@@ -96,8 +104,8 @@ with open(names, 'wb') as f:
      writer.writerow([NN,np.mean(RMSE)])
 print 'ffffffffffffffffffffffffff'
 
-#cs=plt.contourf(lons_f1, lats_f1, RMSE,v, transform=ccrs.PlateCarree(), cmap=plt.cm.terrain)
-cs=plt.contourf(lons_f1, lats_f1, RMSE, transform=ccrs.PlateCarree(), cmap=plt.cm.terrain)
+cs=plt.contourf(lons_f1, lats_f1, RMSE,v, transform=ccrs.PlateCarree(), cmap=plt.cm.terrain)
+#cs=plt.contourf(lons_f1, lats_f1, RMSE, transform=ccrs.PlateCarree(), cmap=plt.cm.terrain)
 cb = plt.colorbar(cs)
 cb.set_label('RMSE [K]', fontsize=20)
 cb.ax.tick_params(labelsize=20)
@@ -143,4 +151,26 @@ ax.set_ylim(ys)
 # Plot_CCLM(bcolor='black', grids='FALSE', flag='FALSE')
 plt.savefig(pdf_name)
 
+plt.close()
+
+# RMSE time-series
+
+fig = plt.figure('2')
+fig.set_size_inches(14, 10)
+#plt.plot(RMSE_TIME_SERIES, 'o-', c='green')
+#plt.xlabel('$time$', size=35)
+plt.ylabel('$RMSE$', size=35)
+plt.title('Boxplot of seasonal RMSEs averaged over the domain', size=30 , y=1.02)
+#plt.ylim([0,.45])
+
+names=pdf_name+'_Analysis.csv'
+with open(names, 'wb') as f:
+     writer = csv.writer(f)
+     writer.writerow(RMSE_TIME_SERIES)
+names_1 = '/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/CCLM/Python_Codes/historical_runs_yearly/src/TEMP/Figure08_RMSE_T_2M.pdf_Forecast.csv'
+fore = numpy.array(list(csv.reader(open(names_1,"rb"),delimiter=','))).astype('float')
+plt.boxplot([RMSE_TIME_SERIES,fore.transpose(), ])
+plt.xticks([1, 2], ['$Analysis$', '$Forecast$'], size=35)
+#plt.ylim([0,.45])
+plt.savefig(pdf_name + '_ts.pdf')
 plt.close()

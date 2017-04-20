@@ -157,6 +157,7 @@ def calculate_MAPS_RMSE_of_the_member(member='1', buffer=4, option=0):
     obs = t_o[0:month_length, buffer:buffer + dext_lat, buffer:buffer + dext_lon]
 
     RMSE=np.zeros((forecast.shape[1],forecast.shape[2]))
+    RMSE_TIME_SERIES=np.zeros(forecast.shape[0])
     lats_f1=lat_f[start_lat:start_lat + dext_lat, start_lon:start_lon + dext_lon]
     lons_f1=lon_f[start_lat:start_lat + dext_lat, start_lon:start_lon + dext_lon]
     #print(forecast.shape[:])
@@ -168,7 +169,12 @@ def calculate_MAPS_RMSE_of_the_member(member='1', buffer=4, option=0):
 
             RMSE[i,j] = mean_squared_error(obs_resh, forecast_resh) ** 0.5
 
-    RMSE_TIME_SERIES = mean_squared_error(obs.mean(axis=tuple(range(1, 3))),forecast.mean(axis=tuple(range(1, 3)))) ** 0.5
+    for i in range(0,forecast.shape[0]):
+        forecast_resh_ts=np.squeeze(forecast[i,:,:])
+        obs_resh_ts=np.squeeze(obs[i,:,:])
+
+        RMSE_TIME_SERIES[i] = mean_squared_error(obs_resh_ts, forecast_resh_ts) ** 0.5
+
     return(RMSE_TIME_SERIES, RMSE, lats_f1, lons_f1, rlat_f, rlon_f, rlat_o, rlon_o, pdf_name)
 
 import cartopy.crs as ccrs
@@ -200,13 +206,13 @@ for i in range(4,5):
     #               edgecolor='black', facecolor='none',
     #               linewidth=0.8)
     #v = np.linspace(0, 1, 11, endpoint=True)
-    #if SEAS[0] == "D":
-    #    v = np.linspace(0, 4, 9, endpoint=True)
-    #else:
-    #    v = np.linspace(0, 1, 6, endpoint=True)
+    if SEAS[0] == "D":
+        v = np.linspace(0, 4, 9, endpoint=True)
+    else:
+        v = np.linspace(0, 2, 9, endpoint=True)
 
-    #cs = plt.contourf(lons_f1,lats_f1,nam, v, transform=ccrs.PlateCarree(), cmap=plt.cm.terrain)
-    cs = plt.contourf(lons_f1,lats_f1,nam, transform=ccrs.PlateCarree(), cmap=plt.cm.terrain)
+    cs = plt.contourf(lons_f1,lats_f1,nam, v, transform=ccrs.PlateCarree(), cmap=plt.cm.terrain)
+    #cs = plt.contourf(lons_f1,lats_f1,nam, transform=ccrs.PlateCarree(), cmap=plt.cm.terrain)
     cb = plt.colorbar(cs)
     cb.set_label('RMSE [K]', fontsize=20)
     cb.ax.tick_params(labelsize=20)
@@ -256,14 +262,21 @@ for i in range(4,5):
     ax.set_ylim(ys)
 
     plt.savefig(pdf_name)
-
+    plt.close()
 
 
     # RMSE time-series
-    plt.close()
+
     fig = plt.figure('2')
     fig.set_size_inches(14, 10)
     plt.plot(nam_ts,'o-', c= 'green')
-    ax.set_xlabel('$time$', size=35)
-    ax.set_ylabel('$RMSE$', size=35)
+    plt.xlabel('$time$', size=35)
+    plt.ylabel('$RMSE$', size=35)
+    plt.ylim([0,.45])
     plt.savefig(pdf_name+'_ts.pdf')
+    plt.close()
+    import csv
+    names='/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/CCLM/Python_Codes/historical_runs_yearly/src/TEMP/' + pdf_name+'_Forecast.csv'
+    with open(names, 'wb') as f:
+         writer = csv.writer(f)
+         writer.writerow(nam_ts)
