@@ -88,8 +88,9 @@ def Plot_CCLM(dir_mistral='/scratch/b/b324045/cclm-sp_2.1/data/ext/',name='europ
     ax = plt.axes(projection=rp)
     ax.coastlines('50m', linewidth=0.8)
     ax.add_feature(cartopy.feature.LAKES,
-                   edgecolor='black', facecolor='none',
+                   edgecolor='none', facecolor='lightblue',
                    linewidth=0.8)
+
     t[t < 0] = 0
     if flag=='TRUE':
         v = np.linspace(0, 3000, 11, endpoint=True)
@@ -99,7 +100,7 @@ def Plot_CCLM(dir_mistral='/scratch/b/b324045/cclm-sp_2.1/data/ext/',name='europ
             cb.set_label('topography [m]', fontsize=20)
             cb.ax.tick_params(labelsize=20)
     ax.add_feature(cartopy.feature.OCEAN,
-                   edgecolor='black', facecolor='white',
+                   edgecolor='black', facecolor='lightblue',
                    linewidth=0.8)
     ax.gridlines()
     ax.text(-45.14, 15.24, r'$45\degree N$',
@@ -134,10 +135,10 @@ def Plot_CCLM(dir_mistral='/scratch/b/b324045/cclm-sp_2.1/data/ext/',name='europ
             plt.scatter(TT[i], SS[i], marker='+', c=grids_color, s=10, zorder=10)
            # print(TT[i],SS[i])
 
-    plt.hlines(y=min(rlats), xmin=min(rlons), xmax=max(rlons), color=bcolor,linestyles= 'dashed', linewidth=2, alpha=alph)
-    plt.hlines(y=max(rlats), xmin=min(rlons), xmax=max(rlons), color=bcolor,linestyles= 'dashed', linewidth=2, alpha=alph)
-    plt.vlines(x=min(rlons), ymin=min(rlats), ymax=max(rlats), color=bcolor,linestyles= 'dashed', linewidth=2, alpha=alph)
-    plt.vlines(x=max(rlons), ymin=min(rlats), ymax=max(rlats), color=bcolor,linestyles= 'dashed', linewidth=2, alpha=alph)
+    plt.hlines(y=min(rlats), xmin=min(rlons), xmax=max(rlons), color=bcolor,linestyles= 'solid', linewidth=2, alpha=alph)
+    plt.hlines(y=max(rlats), xmin=min(rlons), xmax=max(rlons), color=bcolor,linestyles= 'solid', linewidth=2, alpha=alph)
+    plt.vlines(x=min(rlons), ymin=min(rlats), ymax=max(rlats), color=bcolor,linestyles= 'solid', linewidth=2, alpha=alph)
+    plt.vlines(x=max(rlons), ymin=min(rlats), ymax=max(rlats), color=bcolor,linestyles= 'solid', linewidth=2, alpha=alph)
     xs, ys, zs = rp.transform_points(pc,
                                      np.array([-17, 105.0]),
                                      np.array([3, 60])).T
