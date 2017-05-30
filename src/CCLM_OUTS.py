@@ -46,7 +46,7 @@ def rand_station_locations(N=50,sed=777):
     for i in rand_obs_number:
 
 
-        if 30 < float(pairs[i][0]) < 65 and -10 < float(pairs[i][1]) < 44:
+        if 33 < float(pairs[i][0]) < 65 and -10 < float(pairs[i][1]) < 41: #TODO: make the limits smarter
             lat[k]= float(pairs[i][0])
             lon[k] = float(pairs[i][1])
             k = k + 1

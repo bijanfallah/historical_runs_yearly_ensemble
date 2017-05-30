@@ -1,5 +1,5 @@
 def extract_pseudo(NN=2000,dir='/work/bb1029/b324045/work5/03/member_relax_3_big_00/post/',
-                   name='member_relax_3_big_00_T_2M_ts_splitseas_1990_1999_DJF.nc',var='T_2M',month_length=20):
+                   name='member_relax_3_big_00_T_2M_ts_splitseas_1990_1999_DJF.nc',var='T_2M',month_length=20, buffer = 20):
 
     '''
     :param nn: number of observations, no: number of members
@@ -20,7 +20,7 @@ def extract_pseudo(NN=2000,dir='/work/bb1029/b324045/work5/03/member_relax_3_big
     SS=s
     from rotgrid import Rotgrid
 
-    mapping = Rotgrid(-165.0, 46.0, 0, 0)
+    mapping = Rotgrid(-165.0, 46.0, 0, 0)# TDOD: this line has to be adopted according to the CCLM domain!!!
     for i in range(0, NN):
        # print(t.values()[i])
         (TT[i], SS[i]) = mapping.transform(TT[i], SS[i])
@@ -55,7 +55,8 @@ def extract_pseudo(NN=2000,dir='/work/bb1029/b324045/work5/03/member_relax_3_big
     noise=np.zeros((NN,month_length))
     from scipy.interpolate import RegularGridInterpolator as RegInt
     z=range(0,month_length)
-    my_interpolating_function = RegInt((z,rlat_o, rlon_o), t_o[0:month_length,:,:], method='nearest')
+    my_interpolating_function = RegInt((z,rlat_o[buffer:-buffer], rlon_o[buffer:-buffer]), t_o[0:month_length,buffer:-buffer,buffer:-buffer], method='nearest')
+
     #print 'halalooya'
     for i in range(0,month_length):
         points[:, 0] = np.zeros(NN)+i
@@ -67,7 +68,7 @@ def extract_pseudo(NN=2000,dir='/work/bb1029/b324045/work5/03/member_relax_3_big
         #noise[k,:] = np.random.normal(0, np.sqrt(np.var(Interp_Vals[k,:])/200), 12)
         #noise[k,:] = np.random.normal(0, .3, month_length) # for monthly values
         #noise[k,:] = np.random.normal(0, .5, month_length) # for sesonal values T_2M winter DJF
-        noise[k,:] = np.random.normal(0, .5, month_length) # for sesonal values T_2M summer JJA
+        noise[k,:] = np.random.normal(0, .3, month_length) # for sesonal values T_2M summer JJA
         #noise[k,:] = np.random.normal(0, .1, month_length) # for sesonal values TOT_PREC
 
         # plt.hist(f,30) to plot the noise
@@ -93,6 +94,8 @@ NN=600#Number of Observations
 dir='/work/bb1029/b324045/work5/03/member_relax_3_big_00/post/'
 name = 'member_relax_3_big_00_T_2M_ts_splitseas_1990_1999_' + SEAS + '.nc'
 NO=20  # number of ensemble members
+buffer=20
+dir_to_ensemble = "/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/CCLM/Python_Codes/historical_runs_yearly_ensemble/src/"
 # ==================================================================================================
 
 # Programs body
@@ -127,7 +130,7 @@ for jj in range(0,NO):
     import csv
     from itertools import izip
     from itertools import repeat
-    with open('Stations_DATA_' + str(jj) + '.csv', 'wb') as f:
+    with open(dir_to_ensemble + 'Trash/Stations_DATA_' + str(jj) + '.csv', 'wb') as f:
         writer = csv.writer(f)
         for i in range(0, month_length):
             writer.writerows(izip(rlon_s,rlat_s,Temp_Station[:,i],Temp_Station_dirty[:,i],list(repeat(i,NN))))

@@ -57,7 +57,7 @@ SEAS='DJF'
 #SEAS='JJA'
 Vari   = 'T_2M'
 #Vari   = 'TOT_PREC'
-buffer    = 20
+buffer=20
 name_2 = 'member_relax_3_big_00_' + Vari + '_ts_splitseas_1990_1999_' + SEAS + '.nc'
 PDF1    = 'ENSEMBLE_RMSE_' + SEAS + '_'+ Vari +'.pdf'
 PDF2    = 'ENSEMBLE_SPREAD_' + SEAS + '_'+ Vari +'.pdf'
@@ -69,8 +69,8 @@ t_o, lat_o, lon_o, rlat_o, rlon_o =rdfm(dir='/work/bb1029/b324045/work5/03/membe
 
 here = "/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/CCLM/Python_Codes/historical_runs_yearly_ensemble/src/"
 # ==============================================================================================
-if not os.path.exists("Trash"):
-    os.makedirs("Trash")
+if not os.path.exists(here+"Trash"):
+    os.makedirs(here+"Trash")
 
 counter = 0
 for kk in range(1,6):
@@ -109,7 +109,7 @@ for kk in range(1,6):
 
         forecast = t_f[start_time:timesteps, start_lat:start_lat + dext_lat, start_lon:start_lon + dext_lon]
         for pp in range(start_time,timesteps):
-            np.savetxt("Trash/Forecast_" + str(pp) +"_" + str(direc) + "_"+ str(shift) + "_" + SEAS + ".csv", np.squeeze(forecast[pp,:,:]), delimiter=",")
+            np.savetxt(here+"Trash/Forecast_" + str(pp) +"_" + str(direc) + "_"+ str(shift) + "_" + SEAS + ".csv", np.squeeze(forecast[pp,:,:]), delimiter=",")
 
         obs = t_o[start_time:timesteps, buffer:buffer + dext_lat, buffer:buffer + dext_lon]
         RMSE=np.zeros((forecast.shape[1], forecast.shape[2]))
@@ -130,9 +130,9 @@ for kk in range(1,6):
                 RMSE[ii,jj] = mean_squared_error(obs_resh, forecast_resh) ** 0.5
 
 
-        np.savetxt("Trash/RMSE_"+str(counter)+".csv", RMSE, delimiter=",")
+        np.savetxt(here+"Trash/RMSE_"+str(counter)+".csv", RMSE, delimiter=",")
         for rr in range(0,timesteps-start_time):
-            np.savetxt("Trash/SPREAD_"+ str(rr)+ "_" + str(counter)+".csv", np.squeeze(forecast[rr,:,:]), delimiter=",")
+            np.savetxt(here+"Trash/SPREAD_"+ str(rr)+ "_" + str(counter)+".csv", np.squeeze(forecast[rr,:,:]), delimiter=",")
 
         counter = counter + 1
 
@@ -144,7 +144,7 @@ RMSE = np.zeros((forecast.shape[1],forecast.shape[2]))
 
 for pp in range(0, 20):
 
-    RMSE = RMSE + genfromtxt("Trash/RMSE_" + str(pp) + ".csv", delimiter=',')
+    RMSE = RMSE + genfromtxt(here+"Trash/RMSE_" + str(pp) + ".csv", delimiter=',')
 
 RMSE = RMSE / 20
 SPREAD = np.zeros((20,forecast.shape[1],forecast.shape[2]))
@@ -153,10 +153,14 @@ dumm = np.zeros((forecast.shape[1],forecast.shape[2]))
 summ = np.zeros((timesteps,forecast.shape[1],forecast.shape[2]))
 for gg in range(0,timesteps-start_time): # finding the standard deviation between all members over each time and then averaging them over time:
     for dd in range(0,20):
-        dumm = genfromtxt("Trash/SPREAD_"+ str(gg) + "_"+ str(dd)+".csv", delimiter=',')
-        SPREAD[dd,:,:] = np.squeeze(dumm[:,:])
+        dumm = genfromtxt(here+"Trash/SPREAD_"+ str(gg) + "_"+ str(dd)+".csv", delimiter=',')
+        SPREAD[dd,:,:] = dumm[:,:]
+    #SPREAD_01 = SPREAD - SPREAD
+    #for dd in range(0,20):
+    #    SPREAD_01[dd,:,:] = np.squeeze(SPREAD[dd,:,:]) - np.squeeze(np.mean(SPREAD,0))
     summ[gg,:,:] = np.std(SPREAD,0)
-    np.savetxt("Trash/SEASON_SPREAD"+ str(gg) +"_"  + SEAS + ".csv", np.squeeze(summ[gg,:,:]) ** 2, delimiter=",")
+    #print summ[gg,:,:],'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh'
+    np.savetxt(here+"Trash/SEASON_SPREAD"+ str(gg) +"_"  + SEAS + ".csv", np.squeeze(summ[gg,:,:]), delimiter=",")
 SPREAD_final = np.mean(summ,0)
 # SAVING SPREAD and MEAN Forecast STATE for ENSEMBLE at each time-step: =========================================================
 
@@ -164,16 +168,16 @@ for tt in range(timesteps-start_time):
     dumm2 = np.zeros((forecast.shape[1], forecast.shape[2]))
     for gg in range(1,5): # finding the standard deviation between all members over each time and then averaging them over time:
         for dd in range(1,6):
-            dumm2 = dumm2 + genfromtxt("Trash/Forecast_" + str(tt) +"_" + str(direc) + "_"+ str(shift) + "_" + SEAS + ".csv", delimiter=",")
+            dumm2 = dumm2 + genfromtxt(here+"Trash/Forecast_" + str(tt) +"_" + str(direc) + "_"+ str(shift) + "_" + SEAS + ".csv", delimiter=",")
     dumm2 = dumm2 / 20
-    np.savetxt("Trash/SEASON_MEAN" + str(tt) + "_" + SEAS + ".csv", dumm2, delimiter=",")# save each month's ensemble mean
-np.savetxt("Trash/LAT.csv", rlats_f1, delimiter=",")
-np.savetxt("Trash/LON.csv", rlons_f1, delimiter=",")
+    np.savetxt(here+"Trash/SEASON_MEAN" + str(tt) + "_" + SEAS + ".csv", dumm2, delimiter=",")# save each month's ensemble mean
+np.savetxt(here+"Trash/LAT.csv", rlats_f1, delimiter=",")
+np.savetxt(here+"Trash/LON.csv", rlons_f1, delimiter=",")
 #=======================================================================================================================
 # PLOTING ==============================================================================================================
 
-plot_rmse_spread(PDF=PDF1,vari="RMSE",VAL=RMSE,x=forecast.shape[1],y=forecast.shape[2])
-plot_rmse_spread(PDF=PDF2,vari="SPREAD",VAL=SPREAD_final,x=forecast.shape[1],y=forecast.shape[2])
+plot_rmse_spread(PDF=here+'Trash/'+PDF1,vari="RMSE",VAL=RMSE,x=forecast.shape[1],y=forecast.shape[2])
+plot_rmse_spread(PDF=here+'Trash/'+PDF2,vari="SPREAD",VAL=SPREAD_final,x=forecast.shape[1],y=forecast.shape[2])
 
 #==================== DELETING ========================
 for filename in glob.glob(here + "TEMP/Trash/SPREAD_*.csv"):
