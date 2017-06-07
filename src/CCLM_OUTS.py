@@ -65,7 +65,8 @@ def Plot_CCLM(dir_mistral='/scratch/b/b324045/cclm-sp_2.1/data/ext/',name='europ
               ,color_map='TRUE', alph=1, grids='TRUE', grids_color='red', rand_obs='FALSE', NN=500):
     # type: (object, object, object, object, object, object, object, object, object) -> object
     # type: (object, object, object, object, object, object) -> object
-    CMD = 'scp $mistral:'+ dir_mistral+ name+' ./'
+    CMD = 'scp $mistral:'+ dir_mistral+ name+' ./' # here I have commented as I copied the files on local
+    #CMD = 'wget users.met.fu-berlin.de/~BijanFallah/NETCDFS_CCLM/'+ dir_mistral+ name
     os.system(CMD)
     nc = NetCDFFile(name)
     os.remove(name)

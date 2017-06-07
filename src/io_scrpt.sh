@@ -21,16 +21,16 @@ set -ex
 # ====================================== NAMELIST ======================================================================
 month_length=10
 SEAS="JJA"
-NN=100
+NN=500
 Var='T_2M'
 #Var='TOT_PREC'
 #COR_LEN=1
-M=10 #Number of influential points
+M=50 #Number of influential points
 # path to the optiminterp exe files:
 DIR_python='/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/CCLM/Python_Codes/historical_runs_yearly_ensemble/src'
 # path to the codes:
 DIR_OI='/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/Optimal_Interpolation/'
-no_members=20
+no_members=5
 buffer=20
 inflation=1.0
 # path to the work directory:
@@ -49,9 +49,12 @@ fi
 if [ ! -d "${DIR_WORK}${inflation}/${no_members}_${SEAS}" ]; then
   mkdir ${DIR_WORK}${inflation}/${no_members}_${SEAS}
 fi
+if [ ! -d "${DIR_WORK}${inflation}/${no_members}_${SEAS}/final_plot" ]; then
+  mkdir ${DIR_WORK}${inflation}/${no_members}_${SEAS}/final_plot
+fi
 
 DIR_WORK=${DIR_WORK}/${inflation}/${no_members}_${SEAS}/
-while [ $NN -lt 1001 ]; do
+while [ $NN -lt 501 ]; do
  COR_LEN=3
  while [ $COR_LEN -lt 4 ]; do
      member=0

@@ -23,6 +23,7 @@ def read_data_from_mistral(dir='/work/bb1029/b324045/work1/work/member/post/',na
     :rtype: object
     """
     CMD = 'scp $mistral:' + dir + name + ' ./'
+    #CMD = 'wget users.met.fu-berlin.de/~BijanFallah/NETCDFS_CCLM/' + dir + name
     os.system(CMD)
     nc = NetCDFFile(name)
     os.remove(name)

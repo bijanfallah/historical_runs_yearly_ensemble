@@ -16,6 +16,9 @@ def plot_rmse_spread(PDF="name.pdf",vari="RMSE",VAL=np.zeros((10,10,10)),x=10,y=
     Plot_CCLM(dir_mistral='/work/bb1029/b324045/work5/03/member_relax_3_big_00/post/', name=name_2, bcolor='black',
               var=Vari, flag='FALSE', color_map='TRUE', alph=1, grids='FALSE', grids_color='red', rand_obs='FALSE',
               NN=NN)
+    #Plot_CCLM(dir_mistral='3/', name=name_2, bcolor='black',
+    #          var=Vari, flag='FALSE', color_map='TRUE', alph=1, grids='FALSE', grids_color='red', rand_obs='FALSE',
+    #          NN=NN)
 
 
     if vari == "RMSE":
