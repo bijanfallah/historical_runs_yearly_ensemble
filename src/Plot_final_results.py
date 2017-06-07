@@ -43,7 +43,7 @@ result_IO = np.zeros((month_length,Forecast_3.shape[0],Forecast_3.shape[1]))
 for i in range(0,month_length):
     result = np.zeros((Forecast_3.shape[0], Forecast_3.shape[1]))
     for member in range(0,no_members):
-        fil='333333'+ str(member)+'_' + str(inflation)+'/optiminterp/inst/' + 'fi' + str(member) + str(i) +'.csv'
+        fil='333333'+ str(member)+'_' + str(inflation)+'_'+str(member)+'/optiminterp/inst/' + 'fi' + str(no_members) + str(i) +'.csv'
         result=result + np.array(list(csv.reader(open(fil,"rb"),delimiter=','))).astype('float')
         
     result_IO[i,:,:] = np.squeeze(t_f[i,:,:]) + (result/no_members)

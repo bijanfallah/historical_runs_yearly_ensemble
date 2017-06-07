@@ -9,10 +9,11 @@
 #
 #                                                info@bijan-fallah.com
 # ======================================================================================================================
-# TODO: plot the time-series of ensemble members for seasonal values
 # TODO: check the effect of the ensemble number on the RMSE
 # TODO: check the effect of inflation!
-# TODO: Plot the final RMSE maps and SPREAD boxplot forecast vs analysis
+# TODO: check the effect of observational error!
+
+
 
 
 
@@ -20,31 +21,45 @@ set -ex
 # ====================================== NAMELIST ======================================================================
 month_length=10
 SEAS="JJA"
-NN=1000
+NN=100
 Var='T_2M'
 #Var='TOT_PREC'
 #COR_LEN=1
-M=50 #Number of influential points
+M=10 #Number of influential points
+# path to the optiminterp exe files:
 DIR_python='/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/CCLM/Python_Codes/historical_runs_yearly_ensemble/src'
+# path to the codes:
 DIR_OI='/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/Optimal_Interpolation/'
 no_members=20
 buffer=20
-inflation=1.1
-DIR_WORK='/scratch/users/fallah/exp01/'
+inflation=1.0
+# path to the work directory:
+DIR_WORK='/scratch/users/fallah/exp02/'
+first_name='Sensitivity_no_members'
 # ================================================================================================
+if [ ! -d "${DIR_WORK}" ]; then
+  mkdir ${DIR_WORK}
+fi
+
+
 if [ ! -d "${DIR_WORK}${inflation}" ]; then
   mkdir ${DIR_WORK}${inflation}
 fi
-DIR_WORK=${DIR_WORK}/${inflation}/
+
+if [ ! -d "${DIR_WORK}${inflation}/${no_members}_${SEAS}" ]; then
+  mkdir ${DIR_WORK}${inflation}/${no_members}_${SEAS}
+fi
+
+DIR_WORK=${DIR_WORK}/${inflation}/${no_members}_${SEAS}/
 while [ $NN -lt 1001 ]; do
  COR_LEN=3
  while [ $COR_LEN -lt 4 ]; do
      member=0
      while [ $member -lt $no_members ]; do
 
-         NAME='Yearly_RUN'
+         NAME=${first_name}
          NAME_it=${NAME}_${COR_LEN}_${NN}_
-         NAME=${NAME}_${COR_LEN}_${NN}_${member}_${inflation}
+         NAME=${NAME}_${COR_LEN}_${NN}_${member}_${inflation}_${no_members}
 
          if [ ! -d "${DIR_WORK}${NAME}" ]; then
           mkdir ${DIR_WORK}${NAME}
@@ -54,6 +69,7 @@ while [ $NN -lt 1001 ]; do
          cp ${DIR_python}/CCLM_OUTS.py ${DIR_WORK}/
          cp ${DIR_python}/RMSE_MAPS_INGO.py ${DIR_WORK}/
          cp ${DIR_python}/rotgrid.py ${DIR_WORK}/
+         cp ${DIR_python}/Plot_RMSEs_timeseries.py ${DIR_WORK}/
          cp -rf ${DIR_OI}optiminterp ${DIR_WORK}${NAME}/
          XX="$DIR_WORK$NAME/Stations$NAME"
 
@@ -141,6 +157,16 @@ while [ $NN -lt 1001 ]; do
          var2=$(echo ${DIR_WORK}${NAME_it})
          sed -i "s%$var1%$var2%g" ${DIR_WORK}/Plot_final_results.py
          sed -i "s/inflation=1.1/inflation=$inflation/g" ${DIR_WORK}/Plot_final_results.py
+
+         #------------------------------------------- Plot_RMSEs_timeseries.py -----------------------------------------
+         sed -i "s/T_2M/$Var/g" ${DIR_WORK}/Plot_RMSEs_timeseries.py
+         sed -i "s/DJF/$SEAS/g" ${DIR_WORK}/Plot_RMSEs_timeseries.py
+         sed -i "s/month_length=20/month_length=$month_length/g" ${DIR_WORK}/Plot_RMSEs_timeseries.py
+         sed -i "s/no_members=20/no_members=$no_members/g" ${DIR_WORK}/Plot_RMSEs_timeseries.py
+         var1=$(echo ${DIR_python})
+         var2=$(echo ${DIR_WORK})
+         sed -i "s%$var1%$var2%g" ${DIR_WORK}/Plot_RMSEs_timeseries.py
+         sed -i "s/NAMES/${NAME}/g" ${DIR_WORK}/Plot_RMSEs_timeseries.py
          #------------------------------------------- run_IO.m -------------------------------------------------------------
          sed -i "s/lenx = 20;/lenx = $COR_LEN/g" ${DIR_WORK}${NAME}/optiminterp/inst/run_IO.m
          sed -i "s/leny = 20;/leny = $COR_LEN/g" ${DIR_WORK}${NAME}/optiminterp/inst/run_IO.m
@@ -166,7 +192,7 @@ while [ $NN -lt 1001 ]; do
          var2=$(echo ${DIR_WORK}${NAME})
          sed -i "s%$var1%$var2%g" ${DIR_WORK}${NAME}/Plot_RMSE_SPREAD_main.py
 
-
+         sed -i "s/no_members=20/no_members=$no_members/g" ${DIR_WORK}${NAME}/Plot_RMSE_SPREAD_main.py
 
          # ===============================================================================================
          # ==============================  Python calls: =================================================
@@ -177,12 +203,14 @@ while [ $NN -lt 1001 ]; do
          python ${DIR_WORK}${NAME}/Create_Input_FIles.py
          python ${DIR_WORK}${NAME}/run_octave.py
 
+
          # ===============================================================================================
          
 
          member=`expr $member + 1`
      done
-     python ${DIR_WORK}${NAME}/Plot_final_results.py # Plot final results
+     python ${DIR_WORK}/Plot_final_results.py # Plot final results
+     python ${DIR_WORK}/Plot_RMSEs_timeseries.py
      COR_LEN=`expr $COR_LEN + 1`
      echo ${COR_LEN}
  done

@@ -68,6 +68,7 @@ t_o, lat_o, lon_o, rlat_o, rlon_o =rdfm(dir='/work/bb1029/b324045/work5/03/membe
                                             var=Vari)
 
 here = "/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/CCLM/Python_Codes/historical_runs_yearly_ensemble/src/"
+no_members=20
 # ==============================================================================================
 if not os.path.exists(here+"Trash"):
     os.makedirs(here+"Trash")
@@ -122,7 +123,7 @@ for kk in range(1,6):
         rlons_f1 = rlon_f[start_lon:start_lon + dext_lon]
 
 
-        print forecast.shape,rlats_f1.shape, rlons_f1.shape,'-------------------------------------------------------------------------'
+
         for ii in range(0,forecast.shape[1]):
             for jj in range(0,forecast.shape[2]):
                 forecast_resh=np.squeeze(forecast[:,ii,jj])
@@ -142,17 +143,17 @@ for kk in range(1,6):
 RMSE = np.zeros((forecast.shape[1],forecast.shape[2]))
 
 
-for pp in range(0, 20):
+for pp in range(0, no_members):
 
     RMSE = RMSE + genfromtxt(here+"Trash/RMSE_" + str(pp) + ".csv", delimiter=',')
 
-RMSE = RMSE / 20
-SPREAD = np.zeros((20,forecast.shape[1],forecast.shape[2]))
+RMSE = RMSE / no_members
+SPREAD = np.zeros((no_members,forecast.shape[1],forecast.shape[2]))
 SPREAD_final = np.zeros((forecast.shape[1],forecast.shape[2]))
 dumm = np.zeros((forecast.shape[1],forecast.shape[2]))
 summ = np.zeros((timesteps,forecast.shape[1],forecast.shape[2]))
 for gg in range(0,timesteps-start_time): # finding the standard deviation between all members over each time and then averaging them over time:
-    for dd in range(0,20):
+    for dd in range(0,no_members):
         dumm = genfromtxt(here+"Trash/SPREAD_"+ str(gg) + "_"+ str(dd)+".csv", delimiter=',')
         SPREAD[dd,:,:] = dumm[:,:]
     #SPREAD_01 = SPREAD - SPREAD
@@ -166,10 +167,13 @@ SPREAD_final = np.mean(summ,0)
 
 for tt in range(timesteps-start_time):
     dumm2 = np.zeros((forecast.shape[1], forecast.shape[2]))
+    count = 0
     for gg in range(1,5): # finding the standard deviation between all members over each time and then averaging them over time:
         for dd in range(1,6):
-            dumm2 = dumm2 + genfromtxt(here+"Trash/Forecast_" + str(tt) +"_" + str(direc) + "_"+ str(shift) + "_" + SEAS + ".csv", delimiter=",")
-    dumm2 = dumm2 / 20
+            if count < no_members:
+                dumm2 = dumm2 + genfromtxt(here+"Trash/Forecast_" + str(tt) +"_" + str(direc) + "_"+ str(shift) + "_" + SEAS + ".csv", delimiter=",")
+            count = count +1
+    dumm2 = dumm2 / no_members
     np.savetxt(here+"Trash/SEASON_MEAN" + str(tt) + "_" + SEAS + ".csv", dumm2, delimiter=",")# save each month's ensemble mean
 np.savetxt(here+"Trash/LAT.csv", rlats_f1, delimiter=",")
 np.savetxt(here+"Trash/LON.csv", rlons_f1, delimiter=",")

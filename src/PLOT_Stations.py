@@ -7,11 +7,11 @@ fig.set_size_inches(14, 10)
 # ================================= NAMELIST ===================================================
 NN=1000
 SEAS='DJF'
-name_2 = 'member_relax_3_T_2M_ts_splitseas_1984_2014_' + SEAS + '.nc'
+name_2 = 'member_relax_3_big_00_T_2M_ts_splitseas_1990_1999_' + SEAS + '.nc'
 PDF    = 'Stations.pdf'
 # ==============================================================================================
 
-Plot_CCLM(dir_mistral='/work/bb1029/b324045/work4/member_relax_3_big/post/',name=name_2,bcolor='red',var='T_2M',flag='FALSE',color_map='TRUE', alph=1, grids='TRUE', grids_color='red', rand_obs='TRUE', NN=NN)
+Plot_CCLM(dir_mistral='/work/bb1029/b324045/work5/03/member_relax_3_big_00/post/',name=name_2,bcolor='red',var='T_2M',flag='FALSE',color_map='TRUE', alph=1, grids='TRUE', grids_color='red', rand_obs='TRUE', NN=NN)
 plt.savefig(PDF)
 plt.close()
 
