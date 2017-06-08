@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -e 
+DIR_python='/var/autofs/net/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/CCLM/Python_Codes/historical_runs/src'
+DIR_WORK='/scratch/users/fallah/'
+NAME='FIRST_RUN'
+mkdir ${DIR_WORK}/${NAME}
+cp ${DIR_python}/TEMP/*.py ${DIR_WORK}/${NAME}/
+cp ${DIR_python}/*py ${DIR_WORK}/${NAME}/
+
+
+NN=600 # Number of Stations
+sed -i "s/NN=600/NN=$NN/g" ${DIR_WORK}/${NAME}/make_pseudo_obs.py
+sed -i "s/NN=500);/NN=$NN);/g" ${DIR_WORK}/${NAME}/CCLM_OUTS.py
+sed -i "s/'RMSE_Patterns_'/'RMSE_Patterns_$NAME'/g" ${DIR_WORK}/${NAME}/RMSE_MAPS_INGO.py
+sed -i "s/NN=500);/NN=$NN);/g" ${DIR_WORK}/${NAME}/PLOT_Stations.py
+
+
+

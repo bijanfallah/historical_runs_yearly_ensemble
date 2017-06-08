@@ -1,0 +1,109 @@
+\documentclass[a4paper,10pt]{report}
+\usepackage[utf8x]{inputenc}
+\usepackage[printonlyused]{acronym}
+\usepackage{graphicx}
+\usepackage{hyperref}
+% Title Page
+\title{Sensitivity of COSMO-CLM Regional Climate Model to the domain selection}
+\author{\href{https://www.researchgate.net/profile/Bijan_Fallah}{Bijan Fallah} }
+
+
+
+
+
+\begin{document}
+\maketitle
+\section*{List of Acronyms}
+\begin{acronym}
+\acro{cclm}[CCLM]{COSMO-CLM}
+\acro{rcm}[RCM]{Regional Climate Model}
+\acro{t2m}[T2M]{2 meter Temperature}
+\acro{rmse}[RMSE]{Root Mean Square Error}
+\end{acronym}
+\begin{abstract}
+This is a report on how domain selection of \ac{cclm} \ac{rcm} will alter the forecast estimate. Also the sensitivity of the model to the buffer zone is investigated.
+
+\end{abstract}
+
+\section{Experiment Set-up}
+In order to investigate the domain selection impact on the model results, I designed the following procedure:
+
+i) Set-up the \textbf{Default} run of \ac{cclm} over Europe (\ac{cclm} domain 4 grid points smaller than int2lm domain).\\
+
+ii) Set-up 8 similar runs with the Default run but shifted  4 grid points to different directions(1. East, 2. North-East, 3. North, 4. North-West, 5. West, 6. South-West, 7. South, 8. South-East) with the $nboundlines = 3$.\\ 
+
+The model is set up using the default \href{http://users.met.fu-berlin.de/~BijanFallah/YUSPECIF}{namelist} from \href{http://www.clm-community.eu/namelist-tool/namelist-tool_portal/index.htm?conf=cosmo_all}{CLM community}. The model is integrated for a 6 year period 1990-1996. The monthly mean values of \ac{t2m} for the last year (12 months) are used for analysis (first 5 years are considered as spin-up). The code contains the CCLM5.0$\_$clm8 and INT2LM2.0$\_$clm4 version. 
+\begin{figure}%FIGURE01
+\includegraphics[width=1\linewidth]{TEMP/Figure_test.pdf}
+\caption{Model topography and domains. Red box shows the default domain. Black solid box indicates the int2lm domain and the cyan boxes the shifted domains.}
+\label{Fig01}
+\end{figure} 
+
+Figure \ref{Fig01} shows the default domain along with the 8 different shifted domains. To evaluate the differences in model output on \ac{t2m}, I have used the \ac{rmse} as a metric. Results show that shifting in Northwest direction produces the greatest RMSE values (Figure 2). Therefore, in the next step only this direction will be considered for further investigation. 
+\begin{figure}%FIGURE02
+\includegraphics[width=1\linewidth]{TEMP/RMSE__Default.pdf}
+\caption{\ac{rmse} of \ac{t2m} [K] between the shifted domain in the Northwest direction (dashed red box) and the default domain (dashed black box). The int2lm domain is the solid black box.}
+\label{Fig02}
+\end{figure}
+
+The distance between the shifted domain (red dashed box in Figure 2) and the int2lm domain is 2 grid points ($2 \times 0.44^\circ$). In the next step this distance will be increased. To achieve this goal I have decreased the \ac{cclm} domain size so that it is 20 grid points smaller than the int2lm domain. Figure \ref{Fig03} shows the RMSE of the new set-up. The \ac{rmse} pattern remains very similar to the previous setting with minor reduction on Southwest of domain.\par
+
+\begin{figure}%FIGURE03
+\includegraphics[width=1\linewidth]{TEMP/Figure03_RMSE.pdf}
+\caption{\ac{rmse} of \ac{t2m} [K] between the shifted domain in the Northwest direction (dashed red box) and the default domain (dashed black box). The int2lm domain is the solid black box.}
+\label{Fig03}
+\end{figure}
+
+In the next step the the offset position of lateral physical boundary from the outer boundaries (nboundlines in the \ac{cclm} namelist) is set to 4, 6 and 9 instead of 3. According to the \href{http://www2.cosmo-model.org/content/model/documentation/core/cosmoUserGuide.pdf}{COSMO user guide}: ``All  grid  points  interior  to  the  physical  boundary  constitute  the  computational  (or  model interior)  domain,  where  the  model  equations  are  integrated  numerically. The extra points outside the interior domain constitute the computational boundaries. At these points, all model variables are defined and set to specified boundary values, but no dynamical  computations  are  done. '' Figures \ref{Fig04}, \ref{Fig05} and \ref{Fig06} show the changes in \ac{rmse} by increasing the nboundlines, respectively.
+\begin{figure}%FIGURE04
+\includegraphics[width=1\linewidth]{TEMP/Figure04_RMSE.pdf}
+\caption{\ac{rmse} of \ac{t2m} [K] between the shifted domain in the Northwest direction (dashed red box) and the default domain (dashed black box) with the nboundlines parameter set to \textbf{4}. The int2lm domain is the solid black box.}
+\label{Fig04}
+\end{figure}
+
+\begin{figure}%FIGURE05
+\includegraphics[width=1\linewidth]{TEMP/Figure05_RMSE.pdf}
+\caption{\ac{rmse} of \ac{t2m} [K] between the shifted domain in the Northwest direction (dashed red box) and the default domain (dashed black box) with the nboundlines parameter set to \textbf{6}. The int2lm domain is the solid black box.}
+\label{Fig05}
+\end{figure}
+
+\begin{figure}%FIGURE06
+\includegraphics[width=1\linewidth]{TEMP/Figure06_RMSE.pdf}
+\caption{\ac{rmse} of \ac{t2m} [K] between the shifted domain in the Northwest direction (dashed red box) and the default domain (dashed black box) with the nboundlines parameter set to \textbf{9}. The int2lm domain is the solid black box.}
+\label{Fig06}
+\end{figure}
+
+\section{New model set-up after discussions at CLM Community}
+The previous discussions can be found \href{http://redc.clm-community.eu/boards/10/topics/530?r=537#message-537}{here}. The external parameter using the WebPEP are extracted with the parameters shown in Table \ref{Tab01} . \par
+\begin{tabular}[t]{ |p{3cm}|p{3cm}|  }
+\hline
+\multicolumn{2}{|c|}{External Data} \\
+\hline
+Parameter & Value \\
+\hline
+Model version &  EXTPAR-3.0\\
+pollon & -165\\
+pollat & 46\\
+polgam & 0\\
+ie\_tot & 155\\
+je\_tot & 150\\
+startlon\_tot & -34\\
+startlat\_tot & -30\\
+dlon & 0.44\\
+dlat & 0.44\\
+oro & 1\\
+orofilter & 1\\
+landuse &2\\
+soil &1\\
+tcl & 1\\
+aot & 1\\
+albedo & 2\\
+urban & 0\\
+\hline
+\label{Tab01}
+\end{tabular}
+\end{document} 
+
+
+         
+

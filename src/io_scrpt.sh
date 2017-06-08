@@ -30,7 +30,7 @@ M=50 #Number of influential points
 DIR_python='/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/CCLM/Python_Codes/historical_runs_yearly_ensemble/src'
 # path to the codes:
 DIR_OI='/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/Optimal_Interpolation/'
-no_members=5
+no_members=3
 buffer=20
 inflation=1.0
 # path to the work directory:
@@ -170,6 +170,7 @@ while [ $NN -lt 501 ]; do
          var2=$(echo ${DIR_WORK})
          sed -i "s%$var1%$var2%g" ${DIR_WORK}/Plot_RMSEs_timeseries.py
          sed -i "s/NAMES/${NAME}/g" ${DIR_WORK}/Plot_RMSEs_timeseries.py
+         sed -i "s/buffer=20/buffer=$buffer/g" ${DIR_WORK}/Plot_RMSEs_timeseries.py
          #------------------------------------------- run_IO.m -------------------------------------------------------------
          sed -i "s/lenx = 20;/lenx = $COR_LEN/g" ${DIR_WORK}${NAME}/optiminterp/inst/run_IO.m
          sed -i "s/leny = 20;/leny = $COR_LEN/g" ${DIR_WORK}${NAME}/optiminterp/inst/run_IO.m

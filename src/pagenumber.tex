@@ -1,0 +1,34 @@
+\documentclass[12pt]{article}
+\usepackage[top=2.5cm, bottom=2.5cm, left=0.5cm, right=0.5cm]{geometry}
+\usepackage{ifthen}
+\usepackage{pdfpages}
+\usepackage[left]{lineno}
+\renewcommand\thelinenumber{\bf\scriptsize\color{red}\arabic{linenumber}}
+\renewcommand{\baselinestretch}{1.0} % interline spacing
+
+
+\begin{document}
+\newcounter{ctr}
+\newcounter{ct}
+\setcounter{ct}{1}
+\whiledo {\value{ct} < 3} % 2 is the number of the Pdf pages
+{
+\enlargethispage{3cm}
+\begin{minipage}[t]{0.1\textwidth}
+\internallinenumbers
+\begin{runninglinenumbers*}
+\setcounter{ctr}{1}
+\whiledo {\value{ctr} < 48} % each page contain 32 line
+{
+$\longleftrightarrow$\
+\stepcounter {ctr}%
+}
+\end{runninglinenumbers*}
+\end{minipage}
+\begin{minipage}[t]{0.8\textwidth}
+\includepdf[pages=\thect,pagecommand={\thispagestyle{empty}}]{template.pdf}
+\end{minipage}
+\clearpage
+\stepcounter {ct}%
+}
+\end{document}

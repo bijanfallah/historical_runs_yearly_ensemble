@@ -1,0 +1,41 @@
+# This is a program to plot:
+# 1- maps of RMSEs for the ensemble analysis
+# 2- boxplot of RMSEs for Forecast vs Analysis
+# ------------------------- Imports ----------------------------
+SEAS='DJF'
+NN=1000#number of observations should be read from previous funcions!!!!
+month_length=20
+SEAS='DJF'
+Vari   = 'T_2M'
+buffer    = 20
+timesteps=10   # number of the seasons (years)
+start_time=0
+name_2 = 'member_relax_3_big_00_' + Vari + '_ts_splitseas_1990_1999_' + SEAS + '.nc'
+DIR='/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/Optimal_Interpolation/optiminterp/inst/'
+DIR_exp="/home/fallah/Documents/DATA_ASSIMILATION/Bijan/CODES/CCLM/Python_Codes/historical_runs_yearly_ensemble/src/"
+no_members=20
+# --------------------------------------------------------------
+LAT = pd.read_csv(DIR_exp+"Trash/LAT.csv", header=None)
+LON = pd.read_csv(DIR_exp+"Trash/LON.csv", header=None)
+Forecast_3 = np.array(pd.read_csv(DIR_exp+'Trash/SEASON_MEAN1' + '_' + SEAS + '.csv', header=None))#Reading the Forecast values
+t_f = np.zeros((month_length,Forecast_3.shape[0],Forecast_3.shape[1]))
+for month in range(0, month_length):# Reading the ensemble forecast for each month!
+    t_f[month,:,:] = pd.read_csv(DIR_exp+'Trash/SEASON_MEAN' + str(month) + '_' + SEAS + '.csv', header=None)
+t_f = np.array(t_f)
+## add correction to forecast :
+# declare zero matrix which will be filled
+result_IO = np.zeros((month_length,Forecast_3.shape[0],Forecast_3.shape[1]))
+result = np.zeros((Forecast_3.shape[0],Forecast_3.shape[1]))
+for i in range(0,month_length):
+    for member in range(0,no_members):
+        fil=DIR + 'fi' + str(member) + str(i) +'.csv'
+        result=results + np.array(list(csv.reader(open(fil,"rb"),delimiter=','))).astype('float')
+        
+    result_IO[i,:,:] = np.squeeze(t_f[i,:,:]) + (result/no_members)
+   
+# plot the ensemble Analysis RMSE :
+
+pdf_name='Ensemble_RMSE_last_m100_l20.pdf'
+t_o, lat_o, lon_o, rlat_o, rlon_o =rdfm(dir='/work/bb1029/b324045/work5/03/member_relax_3_big_00/post/',
+                                        name=name_2,
+                                        var=Vari)

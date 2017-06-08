@@ -1,0 +1,20 @@
+\documentclass{article}
+\usepackage{pdfpages}
+\usepackage[top=0in, bottom=0in, left=0in, right=0in]{geometry}
+\usepackage[usenames,dvipsnames]{color}
+
+\makeatletter
+ \newsavebox{\@linebox}
+ \savebox{\@linebox}[3em][t]{\parbox[t]{3em}{%
+   \@tempcnta\@ne\relax
+   \loop{\color{Red} \small\the\@tempcnta}\\
+     \advance\@tempcnta by \@ne\ifnum\@tempcnta<66\repeat}}
+\makeatother
+
+\begin{document}
+\makeatletter
+
+%% IF PAGE NUMBERS ALSO ARE NEEDED, USE \thispagestyle{plain} INSTEAD
+\includepdf[pages=1-,pagecommand={\thispagestyle{empty} \hspace{0.5in} \usebox{\@linebox}},fitpaper]{template.pdf}
+\makeatother
+\end{document}
